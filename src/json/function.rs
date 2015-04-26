@@ -12,7 +12,6 @@ use std::{char, f64, fmt, io, str};
 
 use Encodable;
 
-
 /// Shortcut function to decode a JSON `&str` into an object
 pub fn decode<T: ::Decodable>(s: &str) -> DecodeResult<T> {
     let json = match Json::from_str(s) {
@@ -148,19 +147,6 @@ pub fn as_json<T: Encodable>(t: &T) -> AsJson<T> {
 /// on-the-fly via `write!`
 pub fn as_pretty_json<T: Encodable>(t: &T) -> AsPrettyJson<T> {
     AsPrettyJson { inner: t, indent: None }
-}
-
-struct FormatShim<'a, 'b: 'a> {
-    inner: &'a mut fmt::Formatter<'b>,
-}
-
-impl<'a, 'b> fmt::Write for FormatShim<'a, 'b> {
-    fn write_str(&mut self, s: &str) -> fmt::Result {
-        match self.inner.write_str(s) {
-            Ok(_) => Ok(()),
-            Err(_) => Err(fmt::Error)
-        }
-    }
 }
 
 /// Returns a readable error string for a given error code.

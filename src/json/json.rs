@@ -1,9 +1,9 @@
-// use self::JsonEvent;
-use json::error::ErrorCode;
-use json::error::ParserError;
-use json::error::DecoderError;
-// use json::ParserState::*;
-// use json::InternalStackElement::*;
+use json::decoder::{Decoder};
+use json::encoder::{Encoder};
+use json::error;
+use json::error::{ErrorCode, ParserError, DecoderError};
+use json::builder::{Builder, BuilderError};
+use json::pretty_json::{PrettyJson};
 
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;
@@ -16,6 +16,22 @@ use std::string;
 use std::{char, f64, fmt, io, str};
 
 use Encodable;
+
+pub type Array = Vec<Json>;
+pub type Object = BTreeMap<string::String, Json>;
+
+pub struct FormatShim<'a, 'b: 'a> {
+    inner: &'a mut fmt::Formatter<'b>,
+}
+
+impl<'a, 'b> fmt::Write for FormatShim<'a, 'b> {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        match self.inner.write_str(s) {
+            Ok(_) => Ok(()),
+            Err(_) => Err(fmt::Error)
+        }
+    }
+}
 
 /// Represents a json value
 #[derive(Clone, PartialEq, PartialOrd, Debug)]
@@ -37,13 +53,14 @@ impl Json {
             let mut c = Vec::new();
             match rdr.read_to_end(&mut c) {
                 Ok(_)  => (),
-                Err(e) => return Err(io_error_to_error(e))
+                Err(e) => return Err(error::io_error_to_error(e))
             }
             c
         };
         let s = match str::from_utf8(&contents).ok() {
             Some(s) => s,
-            _       => return Err(SyntaxError(NotUtf8, 0, 0))
+            _       => return Err(
+                    ParserError::SyntaxError(ErrorCode::NotUtf8, 0, 0))
         };
         let mut builder = Builder::new(s.chars());
         builder.build()

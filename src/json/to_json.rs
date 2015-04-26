@@ -1,3 +1,5 @@
+use json::json::Json;
+
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;
 use std::i64;

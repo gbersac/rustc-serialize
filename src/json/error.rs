@@ -75,9 +75,6 @@ pub fn error_str(error: ErrorCode) -> &'static str {
     }
 }
 
-// Builder and Parser have the same errors.
-pub type BuilderError = ParserError;
-
 #[derive(PartialEq, Debug)]
 pub enum DecoderError {
     ParseError(ParserError),
@@ -104,7 +101,7 @@ impl fmt::Debug for ErrorCode {
     }
 }
 
-fn io_error_to_error(err: io::Error) -> ParserError {
+pub fn io_error_to_error(err: io::Error) -> ParserError {
     IoError(err)
 }
 

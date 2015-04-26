@@ -1,5 +1,3 @@
-use json::json::JsonEvent;
-
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;
 use std::i64;
@@ -11,6 +9,9 @@ use std::string;
 use std::{char, f64, fmt, io, str};
 
 use Encodable;
+
+// Builder and Parser have the same errors.
+pub type BuilderError = ParserError;
 
 /// A Builder consumes a json::Parser to create a generic Json structure.
 pub struct Builder<T> {
