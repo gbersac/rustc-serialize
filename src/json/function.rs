@@ -18,9 +18,6 @@ use std::{char, f64, fmt, io, str};
 use Encodable;
 
 
-pub type Array = Vec<Json>;
-pub type Object = BTreeMap<string::String, Json>;
-
 /// Shortcut function to decode a JSON `&str` into an object
 pub fn decode<T: ::Decodable>(s: &str) -> DecodeResult<T> {
     let json = match Json::from_str(s) {
