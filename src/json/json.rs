@@ -1,7 +1,7 @@
-use json::JsonEvent::*;
-use json::ErrorCode::*;
-use json::ParserError::*;
-use json::DecoderError::*;
+// use self::JsonEvent;
+use json::error::ErrorCode;
+use json::error::ParserError;
+use json::error::DecoderError;
 // use json::ParserState::*;
 // use json::InternalStackElement::*;
 

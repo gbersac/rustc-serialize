@@ -1,4 +1,4 @@
-use json::JsonEvent;
+use json::json::JsonEvent;
 
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;

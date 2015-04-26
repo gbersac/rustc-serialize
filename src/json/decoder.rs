@@ -1,4 +1,4 @@
-use json::DecoderError;
+use json::error::DecoderError;
 
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;
