@@ -1,9 +1,9 @@
-use super::JsonEvent::*;
-use super::ErrorCode::*;
-use super::ParserError::*;
-use super::DecoderError::*;
-// use super::ParserState::*;
-// use super::InternalStackElement::*;
+use json::JsonEvent::*;
+use json::ErrorCode::*;
+use json::ParserError::*;
+use json::DecoderError::*;
+// use json::ParserState::*;
+// use json::InternalStackElement::*;
 
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;

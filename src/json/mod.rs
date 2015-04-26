@@ -13,17 +13,14 @@ pub use self::stack::{Stack, StackElement};
 pub use self::function::{as_json, as_pretty_json, decode, encode, error_str};
 
 mod as_json;
-mod decoder_error;
 mod encoder;
 mod function;
 mod pretty_json;
 mod test;
 mod as_pretty_json;
 mod decoder;
-mod error_code;
 mod to_json;
 mod builder;
-mod encoder_error;
 mod error;
 mod json;
 mod parser;
