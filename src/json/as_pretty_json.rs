@@ -1,18 +1,4 @@
-use json::JsonEvent::*;
-use json::ErrorCode::*;
-use json::ParserError::*;
-use json::DecoderError::*;
-// use json::ParserState::*;
-// use json::InternalStackElement::*;
-
-use std::collections::{HashMap, BTreeMap};
-use std::error::Error as StdError;
-use std::i64;
 use std::io::prelude::*;
-use std::mem::swap;
-use std::ops::Index;
-use std::str::FromStr;
-use std::string;
 use std::{char, f64, fmt, io, str};
 
 use Encodable;

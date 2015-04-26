@@ -1,9 +1,7 @@
-use json::JsonEvent::*;
-use json::ErrorCode::*;
-use json::ParserError::*;
-use json::DecoderError::*;
-// use json::ParserState::*;
-// use json::InternalStackElement::*;
+use json::JsonEvent;
+use json::ErrorCode;
+use json::ParserError;
+use json::ParserState;
 
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;
