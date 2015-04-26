@@ -1,6 +1,5 @@
-pub use self::to_json::ToJson;
-pub use self::json::Json;
-pub use self::json::JsonEvent;
+pub use self::to_json::{ToJson};
+pub use self::json::{Json, JsonEvent};
 pub use self::error::{DecoderError, EncoderError, ErrorCode, ParserError};
 pub use self::as_json::{AsJson};
 pub use self::as_pretty_json::{AsPrettyJson};
@@ -25,6 +24,9 @@ mod error;
 mod json;
 mod parser;
 mod stack;
+
+use std::collections::{BTreeMap};
+use std::string;
 
 pub type Array = Vec<Json>;
 pub type Object = BTreeMap<string::String, Json>;
