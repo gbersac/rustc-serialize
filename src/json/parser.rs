@@ -1,7 +1,6 @@
 use json::{JsonEvent};
 use json::{ErrorCode, ParserError};
 use json::stack::{Stack, StackElement};
-// use json::{as_json, as_pretty_json, decode, encode, error_str};
 
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;

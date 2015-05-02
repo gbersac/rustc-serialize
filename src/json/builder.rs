@@ -1,3 +1,12 @@
+// use json::parser::{Parser};
+use json::json::{Json, JsonEvent, Array, Object};
+use json::decoder::{Decoder};
+use json::encoder::{Encoder};
+use json::error;
+use json::error::{ErrorCode, ParserError, DecoderError};
+use json::pretty_json::{PrettyJson};
+use json::stack::{Stack, StackElement};
+
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;
 use std::i64;
@@ -32,7 +41,7 @@ impl<T: Iterator<Item = char>> Builder<T> {
         self.bump();
         match self.token.take() {
             None => {}
-            Some(Error(e)) => { return Err(e); }
+            Some(JsonEvent::Error(e)) => { return Err(e); }
             ref tok => { panic!("unexpected token {:?}", tok); }
         }
         result
@@ -44,22 +53,22 @@ impl<T: Iterator<Item = char>> Builder<T> {
 
     fn build_value(&mut self) -> Result<Json, BuilderError> {
         return match self.token.take() {
-            Some(NullValue) => Ok(Json::Null),
-            Some(I64Value(n)) => Ok(Json::I64(n)),
-            Some(U64Value(n)) => Ok(Json::U64(n)),
-            Some(F64Value(n)) => Ok(Json::F64(n)),
-            Some(BooleanValue(b)) => Ok(Json::Boolean(b)),
-            Some(StringValue(ref mut s)) => {
+            Some(JsonEvent::NullValue) => Ok(Json::Null),
+            Some(JsonEvent::I64Value(n)) => Ok(Json::I64(n)),
+            Some(JsonEvent::U64Value(n)) => Ok(Json::U64(n)),
+            Some(JsonEvent::F64Value(n)) => Ok(Json::F64(n)),
+            Some(JsonEvent::BooleanValue(b)) => Ok(Json::Boolean(b)),
+            Some(JsonEvent::StringValue(ref mut s)) => {
                 let mut temp = string::String::new();
                 swap(s, &mut temp);
                 Ok(Json::String(temp))
             }
-            Some(Error(e)) => Err(e),
+            Some(JsonEvent::Error(e)) => Err(e),
             Some(ArrayStart) => self.build_array(),
             Some(ObjectStart) => self.build_object(),
-            Some(ObjectEnd) => self.parser.error(InvalidSyntax),
-            Some(ArrayEnd) => self.parser.error(InvalidSyntax),
-            None => self.parser.error(EOFWhileParsingValue),
+            Some(ObjectEnd) => self.parser.error(ErrorCode::InvalidSyntax),
+            Some(ArrayEnd) => self.parser.error(ErrorCode::InvalidSyntax),
+            None => self.parser.error(ErrorCode::EOFWhileParsingValue),
         }
     }
 
@@ -86,10 +95,18 @@ impl<T: Iterator<Item = char>> Builder<T> {
 
         loop {
             match self.token.take() {
-                Some(ObjectEnd) => { return Ok(Json::Object(values)); }
-                Some(Error(e)) => { return Err(e); }
-                None => { break; }
-                token => { self.token = token; }
+                Some(JsonEvent::ObjectEnd) => {
+                    return Ok(Object(values));
+                }
+                Some(JsonEvent::Error(e)) => {
+                    return Err(e);
+                }
+                None => {
+                    break;
+                }
+                token => {
+                    self.token = token;
+                }
             }
             let key = match self.parser.stack().top() {
                 Some(StackElement::Key(k)) => { k.to_string() }
@@ -101,6 +118,6 @@ impl<T: Iterator<Item = char>> Builder<T> {
             }
             self.bump();
         }
-        return self.parser.error(EOFWhileParsingObject);
+        return self.parser.error(ErrorCode::EOFWhileParsingObject);
     }
 }

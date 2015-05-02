@@ -43,10 +43,10 @@ pub enum ParserError {
 impl PartialEq for ParserError {
     fn eq(&self, other: &ParserError) -> bool {
         match (self, other) {
-            (&SyntaxError(msg0, line0, col0), &SyntaxError(msg1, line1, col1)) =>
+            (&ParserError::SyntaxError(msg0, line0, col0), &ParserError::SyntaxError(msg1, line1, col1)) =>
                 msg0 == msg1 && line0 == line1 && col0 == col1,
-            (&IoError(_), _) => false,
-            (_, &IoError(_)) => false,
+            (&ParserError::IoError(_), _) => false,
+            (_, &ParserError::IoError(_)) => false,
         }
     }
 }
@@ -102,7 +102,7 @@ impl fmt::Debug for ErrorCode {
 }
 
 pub fn io_error_to_error(err: io::Error) -> ParserError {
-    IoError(err)
+    ParserError::IoError(err)
 }
 
 impl StdError for DecoderError {
