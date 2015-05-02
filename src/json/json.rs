@@ -2,7 +2,7 @@ use json::decoder::{Decoder};
 use json::encoder::{Encoder};
 use json::error;
 use json::error::{ErrorCode, ParserError, DecoderError};
-use json::builder::{Builder, BuilderError};
+use json::builder::{Builder, BuilderError}; //commenting this line solve the dependency error
 use json::pretty_json::{PrettyJson};
 
 use std::collections::{HashMap, BTreeMap};

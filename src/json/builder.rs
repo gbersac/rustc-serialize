@@ -1,5 +1,5 @@
-// use json::parser::{Parser};
-use json::json::{Json, JsonEvent, Array, Object};
+// use json::parser::{Parser}; //also have a dependency error with parser
+use json::json::{Json, JsonEvent, Array, Object}; //commenting this line solve the dependency error
 use json::decoder::{Decoder};
 use json::encoder::{Encoder};
 use json::error;
