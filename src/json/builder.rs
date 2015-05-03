@@ -1,5 +1,5 @@
-// use json::parser::{Parser}; //also have a dependency error with parser
-use json::json::{Json, JsonEvent, Array, Object}; //commenting this line solve the dependency error
+use json::parser::{Parser}; 
+use json::json::{Json, JsonEvent, Array, Object}; 
 use json::decoder::{Decoder};
 use json::encoder::{Encoder};
 use json::error;
@@ -10,7 +10,6 @@ use json::stack::{Stack, StackElement};
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;
 use std::i64;
-use std::io::prelude::*;
 use std::mem::swap;
 use std::ops::Index;
 use std::str::FromStr;

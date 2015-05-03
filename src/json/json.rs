@@ -2,13 +2,12 @@ use json::decoder::{Decoder};
 use json::encoder::{Encoder};
 use json::error;
 use json::error::{ErrorCode, ParserError, DecoderError};
-use json::builder::{Builder, BuilderError}; //commenting this line solve the dependency error
+use json::builder::{Builder, BuilderError}; 
 use json::pretty_json::{PrettyJson};
 
 use std::collections::{HashMap, BTreeMap};
 use std::error::Error as StdError;
 use std::i64;
-use std::io::prelude::*;
 use std::mem::swap;
 use std::ops::Index;
 use std::str::FromStr;
