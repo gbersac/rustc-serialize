@@ -1,16 +1,7 @@
 use json::json::Json;
 
 use std::collections::{HashMap, BTreeMap};
-use std::error::Error as StdError;
-use std::i64;
-use std::io::prelude::*;
-use std::mem::swap;
-use std::ops::Index;
-use std::str::FromStr;
 use std::string;
-use std::{char, f64, fmt, io, str};
-
-use Encodable;
 
 /// A trait for converting values to JSON
 pub trait ToJson {

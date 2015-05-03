@@ -1,14 +1,4 @@
-use std::collections::{HashMap, BTreeMap};
-use std::error::Error as StdError;
-use std::i64;
-use std::io::prelude::*;
-use std::mem::swap;
-use std::ops::Index;
-use std::str::FromStr;
-use std::string;
-use std::{char, f64, fmt, io, str};
-
-use Encodable;
+use std::{str, string};
 
 /// A Stack represents the current position of the parser in the logical
 /// structure of the JSON stream.
@@ -103,7 +93,7 @@ impl Stack {
     }
 
     // Used by Parser to insert Key elements at the top of the stack.
-    fn push_key(&mut self, key: string::String) {
+    pub fn push_key(&mut self, key: string::String) {
         self.stack.push(InternalStackElement::InternalKey(
                 self.str_buffer.len() as u16,
                 key.len() as u16));
@@ -113,12 +103,12 @@ impl Stack {
     }
 
     // Used by Parser to insert Index elements at the top of the stack.
-    fn push_index(&mut self, index: u32) {
+    pub fn push_index(&mut self, index: u32) {
         self.stack.push(InternalStackElement::InternalIndex(index));
     }
 
     // Used by Parser to remove the top-most element of the stack.
-    fn pop(&mut self) {
+    pub fn pop(&mut self) {
         assert!(!self.is_empty());
         match *self.stack.last().unwrap() {
             InternalStackElement::InternalKey(_, sz) => {
@@ -131,7 +121,7 @@ impl Stack {
     }
 
     // Used by Parser to test whether the top-most element is an index.
-    fn last_is_index(&self) -> bool {
+    pub fn last_is_index(&self) -> bool {
         if self.is_empty() { return false; }
         return match *self.stack.last().unwrap() {
             InternalStackElement::InternalIndex(_) => true,
@@ -140,7 +130,7 @@ impl Stack {
     }
 
     // Used by Parser to increment the index of the top-most element.
-    fn bump_index(&mut self) {
+    pub fn bump_index(&mut self) {
         let len = self.stack.len();
         let idx = match *self.stack.last().unwrap() {
             InternalStackElement::InternalIndex(i) => { i + 1 }

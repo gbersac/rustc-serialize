@@ -1,18 +1,15 @@
-use json::decoder::{Decoder};
 use json::encoder::{Encoder};
 use json::error;
-use json::error::{ErrorCode, ParserError, DecoderError};
-use json::builder::{Builder, BuilderError}; 
+use json::error::{ErrorCode, ParserError};
+use json::builder::{Builder, BuilderError};
 use json::pretty_json::{PrettyJson};
 
-use std::collections::{HashMap, BTreeMap};
-use std::error::Error as StdError;
+use std::collections::BTreeMap;
 use std::i64;
-use std::mem::swap;
 use std::ops::Index;
 use std::str::FromStr;
 use std::string;
-use std::{char, f64, fmt, io, str};
+use std::{fmt, io, str};
 
 use Encodable;
 
@@ -20,7 +17,7 @@ pub type Array = Vec<Json>;
 pub type Object = BTreeMap<string::String, Json>;
 
 pub struct FormatShim<'a, 'b: 'a> {
-    inner: &'a mut fmt::Formatter<'b>,
+    pub inner: &'a mut fmt::Formatter<'b>,
 }
 
 impl<'a, 'b> fmt::Write for FormatShim<'a, 'b> {

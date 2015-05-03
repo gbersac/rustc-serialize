@@ -1,17 +1,10 @@
 use json::{JsonEvent};
 use json::{ErrorCode, ParserError};
-use json::stack::{Stack, StackElement};
+use json::stack::{Stack};
 
-use std::collections::{HashMap, BTreeMap};
-use std::error::Error as StdError;
 use std::i64;
-use std::mem::swap;
-use std::ops::Index;
-use std::str::FromStr;
 use std::string;
-use std::{char, f64, fmt, io, str};
-
-use Encodable;
+use std::{char};
 
 /// A streaming JSON parser implemented as an iterator of JsonEvent, consuming
 /// an iterator of char.
@@ -91,7 +84,7 @@ impl<T: Iterator<Item = char>> Parser<T> {
         self.ch == Some(c)
     }
 
-    fn error<E>(&self, reason: ErrorCode) -> Result<E, ParserError> {
+    pub fn error<E>(&self, reason: ErrorCode) -> Result<E, ParserError> {
         Err(ParserError::SyntaxError(reason, self.line, self.col))
     }
 
@@ -391,7 +384,7 @@ impl<T: Iterator<Item = char>> Parser<T> {
                     }
                 }
                 _ => {
-                    return self.error_event(ParserError::InvalidSyntax);
+                    return self.error_event(ErrorCode::InvalidSyntax);
                 }
             }
         }
@@ -411,7 +404,7 @@ impl<T: Iterator<Item = char>> Parser<T> {
     fn parse_array(&mut self, first: bool) -> JsonEvent {
         if self.ch_is(']') {
             if !first {
-                self.error_event(ParserError::InvalidSyntax)
+                self.error_event(ErrorCode::InvalidSyntax)
             } else {
                 self.state = if self.stack.is_empty() {
                     ParserState::ParseBeforeFinish
@@ -458,7 +451,7 @@ impl<T: Iterator<Item = char>> Parser<T> {
         } else if self.eof() {
             Some(self.error_event(ErrorCode::EOFWhileParsingArray))
         } else {
-            Some(self.error_event(ParserError::InvalidSyntax))
+            Some(self.error_event(ErrorCode::InvalidSyntax))
         }
     }
 
@@ -527,15 +520,15 @@ impl<T: Iterator<Item = char>> Parser<T> {
             self.bump();
             JsonEvent::ObjectEnd
         } else if self.eof() {
-            self.error_event(JsonEvent::ErrorCode::EOFWhileParsingObject)
+            self.error_event(ErrorCode::EOFWhileParsingObject)
         } else {
-            self.error_event(ParserError::InvalidSyntax)
+            self.error_event(ErrorCode::InvalidSyntax)
         }
     }
 
     fn parse_value(&mut self) -> JsonEvent {
         if self.eof() {
-            return self.error_event(JsonEvent::ErrorCode::EOFWhileParsingValue);
+            return self.error_event(ErrorCode::EOFWhileParsingValue);
         }
         match self.ch_or_null() {
             'n' => { self.parse_ident("ull", JsonEvent::NullValue) }
@@ -554,7 +547,7 @@ impl<T: Iterator<Item = char>> Parser<T> {
                 self.bump();
                 JsonEvent::ObjectStart
             }
-            _ => { self.error_event(ParserError::InvalidSyntax) }
+            _ => { self.error_event(ErrorCode::InvalidSyntax) }
         }
     }
 
@@ -563,7 +556,10 @@ impl<T: Iterator<Item = char>> Parser<T> {
             self.bump();
             value
         } else {
-            JsonEvent::Error(ParserError::SyntaxError(ParserError::InvalidSyntax, self.line, self.col))
+            JsonEvent::Error(ParserError::SyntaxError(
+                    ErrorCode::InvalidSyntax,
+                    self.line,
+                    self.col))
         }
     }
 

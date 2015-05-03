@@ -1,22 +1,11 @@
-use json::parser::{Parser}; 
-use json::json::{Json, JsonEvent, Array, Object}; 
-use json::decoder::{Decoder};
-use json::encoder::{Encoder};
-use json::error;
-use json::error::{ErrorCode, ParserError, DecoderError};
-use json::pretty_json::{PrettyJson};
-use json::stack::{Stack, StackElement};
+use json::parser::{Parser};
+use json::json::{Json, JsonEvent};
+use json::error::{ErrorCode, ParserError};
+use json::stack::{StackElement};
 
-use std::collections::{HashMap, BTreeMap};
-use std::error::Error as StdError;
-use std::i64;
+use std::collections::{BTreeMap};
 use std::mem::swap;
-use std::ops::Index;
-use std::str::FromStr;
 use std::string;
-use std::{char, f64, fmt, io, str};
-
-use Encodable;
 
 // Builder and Parser have the same errors.
 pub type BuilderError = ParserError;
@@ -63,10 +52,10 @@ impl<T: Iterator<Item = char>> Builder<T> {
                 Ok(Json::String(temp))
             }
             Some(JsonEvent::Error(e)) => Err(e),
-            Some(ArrayStart) => self.build_array(),
-            Some(ObjectStart) => self.build_object(),
-            Some(ObjectEnd) => self.parser.error(ErrorCode::InvalidSyntax),
-            Some(ArrayEnd) => self.parser.error(ErrorCode::InvalidSyntax),
+            Some(JsonEvent::ArrayStart) => self.build_array(),
+            Some(JsonEvent::ObjectStart) => self.build_object(),
+            Some(JsonEvent::ObjectEnd) => self.parser.error(ErrorCode::InvalidSyntax),
+            Some(JsonEvent::ArrayEnd) => self.parser.error(ErrorCode::InvalidSyntax),
             None => self.parser.error(ErrorCode::EOFWhileParsingValue),
         }
     }
@@ -76,7 +65,7 @@ impl<T: Iterator<Item = char>> Builder<T> {
         let mut values = Vec::new();
 
         loop {
-            if let Some(ArrayEnd) = self.token {
+            if let Some(JsonEvent::ArrayEnd) = self.token {
                 return Ok(Json::Array(values.into_iter().collect()));
             }
             match self.build_value() {
@@ -95,7 +84,7 @@ impl<T: Iterator<Item = char>> Builder<T> {
         loop {
             match self.token.take() {
                 Some(JsonEvent::ObjectEnd) => {
-                    return Ok(Object(values));
+                    return Ok(Json::Object(values));
                 }
                 Some(JsonEvent::Error(e)) => {
                     return Err(e);

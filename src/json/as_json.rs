@@ -1,18 +1,13 @@
-use std::collections::{HashMap, BTreeMap};
-use std::error::Error as StdError;
-use std::i64;
-use std::io::prelude::*;
-use std::mem::swap;
-use std::ops::Index;
-use std::str::FromStr;
-use std::string;
-use std::{char, f64, fmt, io, str};
+use json::json::{FormatShim};
+use json::encoder::{Encoder};
+
+use std::{fmt};
 
 use Encodable;
 
 pub struct AsJson<'a, T: 'a>
 {
-    inner: &'a T
+    pub inner: &'a T
 }
 
 impl<'a, T: Encodable> fmt::Display for AsJson<'a, T> {
